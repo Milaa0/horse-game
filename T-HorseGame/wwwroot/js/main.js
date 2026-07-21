@@ -1,12 +1,14 @@
-﻿import { Game } from './Game.js ';
+﻿import { Game } from './Game.js';
+
+/** Główny punkt startowy aplikacji.
+* Uruchamia się po wczytaniu strony.
+*/
 
 window.addEventListener('load', () => {
-    const tHorseGame = new Game();
-    tHorseGame.start();
 
-    window.addEventListener('keydown, (e) => {
-       if (e.code === 'Space') {
-        tHorseGame.horse.jump();
-        }
-    });
+    // Tworzenie obiektu gry.
+    const tHorseGame = new Game();
+
+    // Uruhomienie gry.
+    tHorseGame.start();
 });
