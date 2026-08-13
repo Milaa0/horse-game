@@ -3,15 +3,14 @@
         this.width = 50;
         this.height = 50;
         this.x = 50;
-
-        // Ruch
-        this.y = 200;              // Aktualna pozycja Y
-        this.vy = 0;               // Prędkość w pionie
-        this.gravity = 0.6;        // Przyspieszenie w pionie
-        this.jumpStrength = -12;   // Siła skoku
-
         // Poziom podłoża
-        this.groundLevel = 250;
+        this.groundLevel = 210;
+        // Ruch
+        this.y = this.groundLevel - this.height;  // Aktualna pozycja Y
+        this.vy = 0;                              // Prędkość w pionie
+        this.gravity = 0.6;                       // Przyspieszenie w pionie
+        this.jumpStrength = -12;                  // Siła skoku
+
         this.isJumping = false;     // Blokowanie wielokrotnego skoku
     }
 
@@ -31,5 +30,19 @@
             this.vy = 0;
             this.isJumping = false; // Koń dotknął ziemi, można skakać ponownie
         }
+    }
 
+    // Meotda wywoływana przy skoku
+    jump() {
+        if (!this.isJumping) {
+            this.vy = this.jumpStrength;
+            this.isJumping = true;
+        }
+    }
+
+    // Metoda rysująca konia
+    draw(ctx) {
+        ctx.fillStyle = 'black';
+        ctx.fillRect(this.x, this.y, this.width, this.height);
+    }
 }
