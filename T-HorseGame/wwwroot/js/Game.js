@@ -11,6 +11,7 @@ export class Game {
         this.frames = 0;
         this.animationId = null;
         this.isGameOver = false;
+        this.score = 0;
 
         // Sterowanie skokiem (komputer)
         window.addEventListener('keydown', (event) => {
@@ -45,6 +46,11 @@ export class Game {
         for (let i = 0; i < this.obstacles.length; i++) {
             this.obstacles[i].draw(this.ctx);
         }
+        // Rysowanie wyniku
+        this.ctx.font = '20px Arial';
+        this.ctx.fillStyle = 'black';
+        this.ctx.textAlign = 'left';
+        this.ctx.fillText('Wynik: ' + this.score, 20, 30);
     }
 
     // Osobna metoda restartu
@@ -52,6 +58,9 @@ export class Game {
         this.isGameOver = false;
         this.obstacles = [];
         this.frames = 0;
+        this.horse.reset();
+
+        this.score = 0; //Zerowanie punktów po nowym starcie
         this.horse.reset();
 
         this.loop();
@@ -62,6 +71,12 @@ export class Game {
         this.ctx.fillStyle = 'red';
         this.ctx.textAlign = 'center';
         this.ctx.fillText('GAME OVER', this.canvas.width / 2, this.canvas.height / 2);
+
+
+        //Podsumowanie punktów na ekranie przegranej
+        this.ctx.font = '24px Arial';
+        this.ctx.fillStyle = 'black';
+        this.ctx.fillText('Twój wynik: ' + this.score, this.canvas.width / 2, this.canvas.height / 2 + 20);
     }
 
     loop() {
@@ -70,6 +85,7 @@ export class Game {
 
         // Licznik klatek i tworzenie nowych przeszkód
         this.frames++;
+
         if (this.frames % 120 === 0) {
             this.obstacles.push(new Obstacle(this.canvas.width, this.horse.groundLevel));
         }
@@ -94,6 +110,11 @@ export class Game {
                 this.ctx.fillText('Naciśnij spację, aby spróbować ponownie', this.canvas.width / 2, this.canvas.height / 2 + 40);
 
                 return;
+            }
+            // Jeśli koń jest dalej po prawej niż prawa krawędź przeszkody i punkt nie był jeszcze dodany
+            if (!this.obstacles[i].passed && this.horse.x > this.obstacles[i].x + this.obstacles[i].width) {
+                this.score++; // Dodajemy punkt
+                this.obstacles[i].passed = true; // Zaznaczamy, żeby nie dodać go ponownie
             }
 
             // Usuwanie przeszkód, które minęły ekran
