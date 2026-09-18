@@ -45,4 +45,10 @@
         ctx.fillStyle = 'black';
         ctx.fillRect(this.x, this.y, this.width, this.height);
     }
+    // Przywraca konia do ustawień początkowych
+    reset() {
+        this.y = this.groundLevel - this.height; 
+        this.vy = 0; 
+        this.isJumping = false;
+    }
 }
