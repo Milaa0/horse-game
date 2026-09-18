@@ -1,10 +1,10 @@
 ﻿export class Obstacle {
-    constructor(x, groundLevel) {
+    constructor(x, groundLevel, speed) {
         this.width = 30;
         this.height = 40;
         this.x = x;
         this.y = groundLevel - this.height;
-        this.vx = -4;
+        this.vx = -speed;
         this.passed = false;
     }
 

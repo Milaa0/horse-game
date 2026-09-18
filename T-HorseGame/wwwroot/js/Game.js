@@ -5,13 +5,13 @@ export class Game {
     constructor() {
         this.canvas = document.getElementById('gameCanvas');
         this.ctx = this.canvas.getContext('2d');
-
         this.horse = new Horse();
         this.obstacles = [];
         this.frames = 0;
         this.animationId = null;
         this.isGameOver = false;
         this.score = 0;
+        this.gameSpeed = 4;
 
         // Sterowanie skokiem (komputer)
         window.addEventListener('keydown', (event) => {
@@ -58,25 +58,28 @@ export class Game {
         this.isGameOver = false;
         this.obstacles = [];
         this.frames = 0;
-        this.horse.reset();
-
         this.score = 0; //Zerowanie punktów po nowym starcie
+        this.gameSpeed = 4;
         this.horse.reset();
-
         this.loop();
     }
 
     drawGameOver() {
-        this.ctx.font = 'bold 40px Arial';
-        this.ctx.fillStyle = 'red';
-        this.ctx.textAlign = 'center';
-        this.ctx.fillText('GAME OVER', this.canvas.width / 2, this.canvas.height / 2);
+        this.ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
-
-        //Podsumowanie punktów na ekranie przegranej
-        this.ctx.font = '24px Arial';
+        this.ctx.font = ' 40px "Arial"';
         this.ctx.fillStyle = 'black';
-        this.ctx.fillText('Twój wynik: ' + this.score, this.canvas.width / 2, this.canvas.height / 2 + 20);
+        this.ctx.textAlign = 'center';
+        this.ctx.fillText('GAME OVER', this.canvas.width / 2, this.canvas.height / 2 - 40);
+
+        this.ctx.font = ' 24px "Arial"';
+        this.ctx.fillStyle = 'black';
+        this.ctx.fillText('Twój wynik: ' + this.score, this.canvas.width / 2, this.canvas.height / 2 );
+
+        this.ctx.font = '18px "Arial"';
+        this.ctx.fillStyle = '#444';
+        this.ctx.fillText('Naciśnij spację, aby spróbować ponownie', this.canvas.width / 2, this.canvas.height / 2 + 30);
     }
 
     loop() {
@@ -86,8 +89,11 @@ export class Game {
         // Licznik klatek i tworzenie nowych przeszkód
         this.frames++;
 
+        // Przyspieszenie z każdą klatką
+        this.gameSpeed += 0.002;
+
         if (this.frames % 120 === 0) {
-            this.obstacles.push(new Obstacle(this.canvas.width, this.horse.groundLevel));
+            this.obstacles.push(new Obstacle(this.canvas.width, this.horse.groundLevel, this.gameSpeed));
         }
 
         // Aktualizacja i usuwanie starych przeszkód
@@ -105,9 +111,6 @@ export class Game {
                 cancelAnimationFrame(this.animationId);
 
                 this.drawGameOver();
-
-                this.ctx.font = '20px Arial';
-                this.ctx.fillText('Naciśnij spację, aby spróbować ponownie', this.canvas.width / 2, this.canvas.height / 2 + 40);
 
                 return;
             }
